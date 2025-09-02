@@ -22,14 +22,14 @@ async function createProduct(formData: FormData): Promise<void> {
   const description = String(formData.get("description") || "").trim() || null;
   const dailyPrice = Number(formData.get("dailyPrice") || 0);
   const depositPrice = Number(formData.get("depositPrice") || 0);
-  const imageFile = formData.get("imageFile") as File | null;
+  const imageFile = formData.get("imageFile");
   if (!name) return;
   const makeSlug = (v: string) => v.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "").replace(/-+/g, "-").replace(/^-|-$|_/g, "");
   const slug = makeSlug(name);
   let imageUrl: string | null = null;
-  if (imageFile && typeof imageFile.arrayBuffer === "function") {
+  if (imageFile && imageFile instanceof Blob) {
     const buffer = Buffer.from(await imageFile.arrayBuffer());
-    const type = (imageFile as any).type || "image/jpeg";
+    const type = imageFile.type || "image/jpeg";
     imageUrl = `data:${type};base64,${buffer.toString("base64")}`;
   }
   const categoryId = await getDefaultCategoryId();
@@ -54,15 +54,15 @@ async function updateProduct(formData: FormData): Promise<void> {
   const description = String(formData.get("description") || "").trim() || null;
   const dailyPrice = Number(formData.get("dailyPrice") || 0);
   const depositPrice = Number(formData.get("depositPrice") || 0);
-  const imageFile = formData.get("imageFile") as File | null;
-  const data: any = {
+  const imageFile = formData.get("imageFile");
+  const data: Partial<{ description: string | null; dailyPrice: number; depositPrice: number; imageUrl: string | null }> = {
     description,
     dailyPrice: Number.isFinite(dailyPrice) ? dailyPrice : 0,
     depositPrice: Number.isFinite(depositPrice) ? depositPrice : 0,
   };
-  if (imageFile && typeof imageFile.arrayBuffer === "function") {
+  if (imageFile && imageFile instanceof Blob) {
     const buffer = Buffer.from(await imageFile.arrayBuffer());
-    const type = (imageFile as any).type || "image/jpeg";
+    const type = imageFile.type || "image/jpeg";
     data.imageUrl = `data:${type};base64,${buffer.toString("base64")}`;
   }
   await prisma.product.update({ where: { id }, data });
@@ -77,25 +77,7 @@ async function deleteProduct(formData: FormData): Promise<void> {
   revalidatePath("/admin/products");
 }
 
-async function addProductImage(formData: FormData): Promise<void> {
-  "use server";
-  const productId = Number(formData.get("productId") || 0);
-  const url = String(formData.get("url") || "").trim();
-  const alt = String(formData.get("alt") || "").trim() || null;
-  if (!productId || !url) return;
-  await prisma.productImage.create({
-    data: { productId, url, alt },
-  });
-  revalidatePath("/admin/products");
-}
-
-async function deleteProductImage(formData: FormData): Promise<void> {
-  "use server";
-  const imageId = Number(formData.get("imageId") || 0);
-  if (!imageId) return;
-  await prisma.productImage.delete({ where: { id: imageId } });
-  revalidatePath("/admin/products");
-}
+// Удалены функции управления галереей для минимализма интерфейса
 
 export default async function AdminProducts() {
   const products = await prisma.product.findMany({
