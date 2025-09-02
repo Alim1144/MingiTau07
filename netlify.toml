@@ -5,6 +5,7 @@
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["@prisma/client"]
+  included_files = ["prisma/dev.db", "node_modules/.prisma/client/**"]
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

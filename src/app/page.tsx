@@ -15,9 +15,6 @@ export default function Home() {
             <div className="space-y-5 max-w-2xl">
               <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-1">Аренда горнолыжной экипировки</h1>
               <p className="text-base sm:text-lg text-zinc-200">Лыжи, сноуборды, ботинки, шлемы и защита. Быстрое оформление и удобный самовывоз.</p>
-              <div className="text-xs sm:text-sm text-zinc-300 bg-black/30 border border-white/10 rounded-md inline-block px-3 py-2">
-                Скидка 50% для пенсионеров и участников СВО. Все цены указаны за день проката (8:00–17:00).
-              </div>
               <div className="mt-4 grid grid-cols-1 sm:flex sm:flex-row gap-3">
                 <Button><a href="#catalog">Смотреть каталог</a></Button>
                 <Button variant="secondary"><a href="#how">Как арендовать</a></Button>

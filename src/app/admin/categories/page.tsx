@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
+export const runtime = "nodejs";
+
 async function createCategory(formData: FormData): Promise<void> {
   "use server";
   const name = String(formData.get("name") || "").trim();

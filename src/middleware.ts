@@ -1,11 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { ADMIN_COOKIE } from "@/lib/auth";
 
-export function middleware() {
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
+    const cookie = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (cookie !== "ok") {
+      const url = req.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
+    }
+  }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [],
+  matcher: ["/admin/:path*"],
 };
 
 

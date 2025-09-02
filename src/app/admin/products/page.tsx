@@ -3,6 +3,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export const runtime = "nodejs";
+
 async function createProduct(formData: FormData): Promise<void> {
   "use server";
   const name = String(formData.get("name") || "").trim();

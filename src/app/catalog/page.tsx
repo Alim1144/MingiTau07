@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export const revalidate = 0;
+export const runtime = "nodejs";
 
 export default async function CatalogPage() {
   const categories = await prisma.category.findMany({
