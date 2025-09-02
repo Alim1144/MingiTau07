@@ -24,7 +24,7 @@ export function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-zinc-200">
-          <Link href="/catalog" className="hover:text-white">Каталог</Link>
+          <Link href="/catalog" className="hover:text-white">Ассортимент</Link>
           <a href="#how" className="hover:text-white">Как это работает</a>
           <a href="#contacts" className="hover:text-white">Контакты</a>
           <Link href="/admin"><Button>Админ</Button></Link>
@@ -66,7 +66,7 @@ export function Header() {
           onClick={(e) => e.stopPropagation()}
         >
           <nav className="p-4 space-y-2 text-base">
-            <Link href="/catalog" className="block rounded-md px-3 py-3 text-zinc-100 hover:bg-white/10" onClick={() => setMenuOpen(false)}>Каталог</Link>
+            <Link href="/catalog" className="block rounded-md px-3 py-3 text-zinc-100 hover:bg-white/10" onClick={() => setMenuOpen(false)}>Ассортимент</Link>
             <a href="#how" className="block rounded-md px-3 py-3 text-zinc-100 hover:bg-white/10" onClick={() => setMenuOpen(false)}>Как это работает</a>
             <a href="#contacts" className="block rounded-md px-3 py-3 text-zinc-100 hover:bg-white/10" onClick={() => setMenuOpen(false)}>Контакты</a>
             <Link href="/admin" className="block" onClick={() => setMenuOpen(false)}>
