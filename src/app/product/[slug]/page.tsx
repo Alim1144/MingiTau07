@@ -2,13 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug } = params;
   const product = await prisma.product.findUnique({
     where: { slug },
     include: { images: true, category: true },

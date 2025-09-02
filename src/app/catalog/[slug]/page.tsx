@@ -1,13 +1,17 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default async function CategoryPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug } = params;
   const category = await prisma.category.findUnique({
     where: { slug },
     include: { products: true },
@@ -26,7 +30,7 @@ export default async function CategoryPage({ params }: Props) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {category.products.map((p) => (
-            <a key={p.id} href={`/product/${p.slug}`} className="group rounded-xl border bg-white p-4 hover:shadow-sm">
+            <Link key={p.id} href={`/product/${p.slug}`} className="group rounded-xl border bg-white p-4 hover:shadow-sm">
               <div className="relative h-40 mb-3 rounded-lg border bg-zinc-50 overflow-hidden">
                 {p.imageUrl ? (
                   <Image src={p.imageUrl} alt={p.name} fill className="object-cover" />
@@ -36,7 +40,7 @@ export default async function CategoryPage({ params }: Props) {
               </div>
               <div className="font-medium group-hover:underline">{p.name}</div>
               <div className="text-sm text-zinc-600 mt-1">от {String(p.dailyPrice)} ₽/день</div>
-            </a>
+            </Link>
           ))}
         </div>
       )}
