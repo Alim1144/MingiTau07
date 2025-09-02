@@ -1,9 +1,10 @@
-"use server";
 import Image from "next/image";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-async function createProduct(formData: FormData) {
+async function createProduct(formData: FormData): Promise<void> {
+  "use server";
   const name = String(formData.get("name") || "").trim();
   const slug = String(formData.get("slug") || "").trim();
   const description = String(formData.get("description") || "").trim() || null;
@@ -11,7 +12,9 @@ async function createProduct(formData: FormData) {
   const depositPrice = Number(formData.get("depositPrice") || 0);
   const imageUrl = String(formData.get("imageUrl") || "").trim() || null;
   const categoryId = Number(formData.get("categoryId") || 0);
-  if (!name || !slug || !categoryId) return { error: "Заполните обязательные поля" } as const;
+  if (!name || !slug || !categoryId) {
+    return;
+  }
   await prisma.product.create({
     data: {
       name,
@@ -24,12 +27,12 @@ async function createProduct(formData: FormData) {
     },
   });
   revalidatePath("/admin/products");
-  return { ok: true } as const;
 }
 
-async function updateProduct(formData: FormData) {
+async function updateProduct(formData: FormData): Promise<void> {
+  "use server";
   const id = Number(formData.get("id") || 0);
-  if (!id) return { error: "Нет ID" } as const;
+  if (!id) return;
   const name = String(formData.get("name") || "").trim();
   const slug = String(formData.get("slug") || "").trim();
   const description = String(formData.get("description") || "").trim() || null;
@@ -50,15 +53,14 @@ async function updateProduct(formData: FormData) {
     },
   });
   revalidatePath("/admin/products");
-  return { ok: true } as const;
 }
 
-async function deleteProduct(formData: FormData) {
+async function deleteProduct(formData: FormData): Promise<void> {
+  "use server";
   const id = Number(formData.get("id") || 0);
-  if (!id) return { error: "Нет ID" } as const;
+  if (!id) return;
   await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/products");
-  return { ok: true } as const;
 }
 
 export default async function AdminProducts({ searchParams }: { searchParams?: Promise<{ q?: string; page?: string }> }) {
@@ -200,7 +202,7 @@ export default async function AdminProducts({ searchParams }: { searchParams?: P
                 <input type="hidden" name="id" value={p.id} />
                 <button className="w-full rounded-md border border-red-500/30 text-red-400 px-3 py-2 text-sm hover:bg-red-500/10">Удалить</button>
               </form>
-              <a href={`/product/${p.slug}`} className="block text-xs text-zinc-400 hover:text-zinc-200">Открыть на сайте →</a>
+              <Link href={`/product/${p.slug}`} className="block text-xs text-zinc-400 hover:text-zinc-200">Открыть на сайте →</Link>
             </div>
           ))}
         </div>
@@ -209,18 +211,18 @@ export default async function AdminProducts({ searchParams }: { searchParams?: P
             Страница {pageNum} из {totalPages} • Показано {products.length} из {total}
           </div>
           <div className="flex items-center gap-2">
-            <a
+            <Link
               className={`rounded-md border border-white/15 px-3 py-1.5 hover:bg-white/10 ${pageNum <= 1 ? "pointer-events-none opacity-50" : ""}`}
               href={`?q=${encodeURIComponent(q)}&page=${pageNum - 1}`}
             >
               Назад
-            </a>
-            <a
+            </Link>
+            <Link
               className={`rounded-md border border-white/15 px-3 py-1.5 hover:bg-white/10 ${pageNum >= totalPages ? "pointer-events-none opacity-50" : ""}`}
               href={`?q=${encodeURIComponent(q)}&page=${pageNum + 1}`}
             >
               Вперёд
-            </a>
+            </Link>
           </div>
         </div>
         {products.length === 0 ? (

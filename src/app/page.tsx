@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/Button";
 
@@ -26,7 +27,7 @@ export default function Home() {
           <Container>
             <div className="flex items-start sm:items-end justify-between mb-6">
               <h2 className="text-2xl sm:text-3xl font-semibold">Категории</h2>
-              <a href="/catalog" className="hidden sm:inline text-sm text-zinc-300 hover:text-white">Открыть весь каталог →</a>
+              <Link href="/catalog" className="hidden sm:inline text-sm text-zinc-300 hover:text-white">Открыть весь каталог →</Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
               {[
@@ -35,16 +36,16 @@ export default function Home() {
                 { title: "Ботинки", img: "/boots.svg", href: "/catalog/botinki" },
                 { title: "Шлемы и защита", img: "/helmet.svg", href: "/catalog/shlemy" },
               ].map((c) => (
-                <a key={c.title} href={c.href} className="group rounded-xl border border-white/10 bg-zinc-900 p-4 hover:bg-zinc-800 transition shadow-sm">
+                <Link key={c.title} href={c.href} className="group rounded-xl border border-white/10 bg-zinc-900 p-4 hover:bg-zinc-800 transition shadow-sm">
                   <div className="relative h-24 sm:h-28 mb-2 rounded-lg bg-zinc-800/50">
                     <Image src={c.img} alt={c.title} fill className="object-contain p-5" />
                   </div>
                   <div className="text-sm sm:text-base font-semibold text-zinc-100 group-hover:underline">{c.title}</div>
-                </a>
+                </Link>
               ))}
             </div>
             <div className="sm:hidden mt-4">
-              <a href="/catalog" className="text-sm text-zinc-300 hover:text-white">Открыть весь каталог →</a>
+              <Link href="/catalog" className="text-sm text-zinc-300 hover:text-white">Открыть весь каталог →</Link>
             </div>
           </Container>
         </section>

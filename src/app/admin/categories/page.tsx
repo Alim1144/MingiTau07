@@ -1,15 +1,17 @@
-"use server";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
-async function createCategory(formData: FormData) {
+async function createCategory(formData: FormData): Promise<void> {
+  "use server";
   const name = String(formData.get("name") || "").trim();
   const slug = String(formData.get("slug") || "").trim();
   const description = String(formData.get("description") || "").trim() || null;
-  if (!name || !slug) return { error: "Заполните название и слаг" } as const;
+  if (!name || !slug) {
+    return;
+  }
   await prisma.category.create({ data: { name, slug, description } });
   revalidatePath("/admin/categories");
-  return { ok: true } as const;
 }
 
 export default async function AdminCategories() {
@@ -42,7 +44,7 @@ export default async function AdminCategories() {
                 <div className="font-medium">{c.name}</div>
                 <div className="text-xs text-zinc-400">/{c.slug}</div>
               </div>
-              <a href={`/catalog/${c.slug}`} className="text-sm hover:underline">Открыть</a>
+              <Link href={`/catalog/${c.slug}`} className="text-sm hover:underline">Открыть</Link>
             </div>
           ))}
           {categories.length === 0 ? (

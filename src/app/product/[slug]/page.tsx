@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
@@ -46,7 +47,7 @@ export default async function ProductPage({ params }: Props) {
           ) : null}
           <div className="flex gap-3">
             <button className="rounded-md bg-white text-black px-4 py-2.5 hover:bg-zinc-200">Забронировать</button>
-            <a href="/catalog" className="rounded-md border border-white/10 px-4 py-2.5 hover:bg-zinc-800">Вернуться в каталог</a>
+            <Link href="/catalog" className="rounded-md border border-white/10 px-4 py-2.5 hover:bg-zinc-800">Вернуться в каталог</Link>
           </div>
         </div>
       </div>
