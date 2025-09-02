@@ -16,7 +16,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 bg-gradient-to-b from-black/90 to-black/60 backdrop-blur border-b border-white/10">
+    <header className="sticky top-0 z-40 bg-black/85 md:bg-gradient-to-b md:from-black/90 md:to-black/60 md:backdrop-blur border-b border-white/10">
       <Container className="h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <span className="font-semibold text-lg text-white">Минги-Тау</span>

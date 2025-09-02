@@ -25,7 +25,14 @@ export default async function ProductPage({ params }: Props) {
         <div className="rounded-xl border border-white/10 bg-zinc-900 p-3 sm:p-4 shadow-sm">
           <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-black">
             {product.imageUrl ? (
-              <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 50vw"
+                priority={false}
+              />
             ) : (
               <div className="w-full h-full grid place-items-center text-zinc-500 text-sm">Нет фото</div>
             )}
@@ -55,7 +62,7 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </div>
       {/* Sticky CTA on mobile */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/80 backdrop-blur px-4 py-3 flex items-center justify-between gap-3" style={{paddingBottom: "max(env(safe-area-inset-bottom), 12px)"}}>
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/90 px-4 py-3 flex items-center justify-between gap-3" style={{paddingBottom: "max(env(safe-area-inset-bottom), 12px)"}}>
         <div className="text-sm text-zinc-300">от {String(product.dailyPrice)} ₽/день</div>
         <button className="rounded-md bg-white text-black px-4 py-2.5 font-medium">Забронировать</button>
       </div>

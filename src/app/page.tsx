@@ -39,7 +39,14 @@ export default async function Home() {
                   <Link key={p.id} href={`/product/${p.slug}`} className="group rounded-xl border border-white/10 bg-zinc-900 hover:bg-zinc-800 transition shadow-sm">
                     <div className="relative aspect-[4/3] rounded-t-xl overflow-hidden bg-black">
                       {p.imageUrl ? (
-                        <Image src={p.imageUrl} alt={p.name} fill className="object-cover" />
+                        <Image
+                          src={p.imageUrl}
+                          alt={p.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          priority={false}
+                        />
                       ) : (
                         <div className="w-full h-full grid place-items-center text-zinc-500 text-sm">Нет фото</div>
                       )}
