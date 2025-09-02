@@ -4,6 +4,8 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/Button";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 export default async function Home() {
   const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
   return (
