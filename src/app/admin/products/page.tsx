@@ -65,6 +65,26 @@ async function deleteProduct(formData: FormData): Promise<void> {
   revalidatePath("/admin/products");
 }
 
+async function addProductImage(formData: FormData): Promise<void> {
+  "use server";
+  const productId = Number(formData.get("productId") || 0);
+  const url = String(formData.get("url") || "").trim();
+  const alt = String(formData.get("alt") || "").trim() || null;
+  if (!productId || !url) return;
+  await prisma.productImage.create({
+    data: { productId, url, alt },
+  });
+  revalidatePath("/admin/products");
+}
+
+async function deleteProductImage(formData: FormData): Promise<void> {
+  "use server";
+  const imageId = Number(formData.get("imageId") || 0);
+  if (!imageId) return;
+  await prisma.productImage.delete({ where: { id: imageId } });
+  revalidatePath("/admin/products");
+}
+
 export default async function AdminProducts({ searchParams }: { searchParams?: Promise<{ q?: string; page?: string }> }) {
   const { q = "", page = "1" } = (searchParams ? await searchParams : {}) ?? {};
   const pageSize = 12;
@@ -84,7 +104,7 @@ export default async function AdminProducts({ searchParams }: { searchParams?: P
     prisma.product.count({ where }),
     prisma.product.findMany({
       where,
-      include: { category: true },
+      include: { category: true, images: true },
       orderBy: { createdAt: "desc" },
       skip: (pageNum - 1) * pageSize,
       take: pageSize,
@@ -160,6 +180,31 @@ export default async function AdminProducts({ searchParams }: { searchParams?: P
                   <div className="w-full h-full grid place-items-center text-xs text-zinc-500">Нет изображения</div>
                 )}
               </div>
+              {p.images && p.images.length > 0 ? (
+                <div className="grid grid-cols-5 gap-2">
+                  {p.images.map((img) => (
+                    <div key={img.id} className="relative aspect-square rounded-md overflow-hidden border border-white/10 bg-zinc-800">
+                      <Image src={img.url} alt={img.alt ?? p.name} fill className="object-cover" />
+                      <form action={deleteProductImage} className="absolute top-1 right-1">
+                        <input type="hidden" name="imageId" value={img.id} />
+                        <button className="rounded bg-black/70 px-1.5 py-0.5 text-[10px] text-red-300 border border-red-500/40 hover:bg-red-500/20">×</button>
+                      </form>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              <form action={addProductImage} className="grid grid-cols-5 gap-2 items-end">
+                <input type="hidden" name="productId" value={p.id} />
+                <div className="col-span-3 space-y-1">
+                  <label className="text-xs">URL изображения</label>
+                  <input name="url" placeholder="https://..." className="w-full rounded-md border border-white/15 bg-black px-2 py-1.5 text-xs" />
+                </div>
+                <div className="col-span-2 space-y-1">
+                  <label className="text-xs">Alt</label>
+                  <input name="alt" placeholder="Описание" className="w-full rounded-md border border-white/15 bg-black px-2 py-1.5 text-xs" />
+                </div>
+                <button className="col-span-5 rounded-md border border-white/15 px-2 py-1.5 text-xs hover:bg-white/10">Добавить в галерею</button>
+              </form>
               <form action={updateProduct} className="space-y-3">
                 <input type="hidden" name="id" value={p.id} />
                 <div className="space-y-1">

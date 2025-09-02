@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: Props) {
 
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold mb-2">{product.name}</h1>
-          <div className="text-sm text-zinc-400 mb-4">Категория: {product.category.name}</div>
+          {/* Категория скрыта по запросу: показываем только товар */}
           <div className="text-lg font-medium mb-6">Цена: от {String(product.dailyPrice)} ₽/день • Залог: {String(product.depositPrice)} ₽</div>
           {product.description ? (
             <p className="text-zinc-300 mb-6 whitespace-pre-line">{product.description}</p>

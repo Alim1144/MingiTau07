@@ -7,7 +7,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <h1 className="text-2xl font-semibold">Админ-панель</h1>
         <nav className="flex gap-3 text-sm">
           <Link href="/admin" className="hover:underline">Главная</Link>
-          <Link href="/admin/categories" className="hover:underline">Категории</Link>
           <Link href="/admin/products" className="hover:underline">Товары</Link>
         </nav>
       </header>
