@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/Button";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
@@ -25,28 +27,31 @@ export default function Home() {
 
         <section id="catalog" className="py-10 sm:py-14">
           <Container>
-            <div className="flex items-start sm:items-end justify-between mb-6">
-              <h2 className="text-2xl sm:text-3xl font-semibold">Категории</h2>
-              <Link href="/catalog" className="hidden sm:inline text-sm text-zinc-300 hover:text-white">Открыть весь каталог →</Link>
+            <div className="mb-6">
+              <h2 className="text-2xl sm:text-3xl font-semibold">Ассортимент</h2>
+              <p className="text-sm text-zinc-400 mt-1">Всё в одном списке, без разделов</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-              {[
-                { title: "Лыжи", img: "/skis.svg", href: "/catalog/lyzhi" },
-                { title: "Сноуборды", img: "/snowboard.svg", href: "/catalog/snoubordy" },
-                { title: "Ботинки", img: "/boots.svg", href: "/catalog/botinki" },
-                { title: "Шлемы и защита", img: "/helmet.svg", href: "/catalog/shlemy" },
-              ].map((c) => (
-                <Link key={c.title} href={c.href} className="group rounded-xl border border-white/10 bg-zinc-900 p-4 hover:bg-zinc-800 transition shadow-sm">
-                  <div className="relative h-24 sm:h-28 mb-2 rounded-lg bg-zinc-800/50">
-                    <Image src={c.img} alt={c.title} fill className="object-contain p-5" />
-                  </div>
-                  <div className="text-sm sm:text-base font-semibold text-zinc-100 group-hover:underline">{c.title}</div>
-                </Link>
-              ))}
-            </div>
-            <div className="sm:hidden mt-4">
-              <Link href="/catalog" className="text-sm text-zinc-300 hover:text-white">Открыть весь каталог →</Link>
-            </div>
+            {products.length === 0 ? (
+              <div className="text-zinc-400">Товары пока не добавлены.</div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+                {products.map((p) => (
+                  <Link key={p.id} href={`/product/${p.slug}`} className="group rounded-xl border border-white/10 bg-zinc-900 hover:bg-zinc-800 transition shadow-sm">
+                    <div className="relative aspect-[4/3] rounded-t-xl overflow-hidden bg-black">
+                      {p.imageUrl ? (
+                        <Image src={p.imageUrl} alt={p.name} fill className="object-cover" />
+                      ) : (
+                        <div className="w-full h-full grid place-items-center text-zinc-500 text-sm">Нет фото</div>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <div className="font-medium text-base sm:text-lg text-zinc-100 group-hover:underline">{p.name}</div>
+                      <div className="text-xs sm:text-sm text-zinc-400 mt-1">от {String(p.dailyPrice)} ₽/день</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </Container>
         </section>
 
