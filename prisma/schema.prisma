@@ -1,0 +1,46 @@
+// Datasource and generator
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Catalog models
+model Category {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  name      String
+  description String?
+  imageUrl  String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  slug         String        @unique
+  name         String
+  description  String?
+  dailyPrice   Decimal       @default(0)
+  depositPrice Decimal       @default(0)
+  available    Boolean       @default(true)
+  imageUrl     String?
+  categoryId   Int
+  category     Category      @relation(fields: [categoryId], references: [id])
+  images       ProductImage[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  url       String
+  alt       String?
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+}
+
